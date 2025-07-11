@@ -10,8 +10,8 @@
 
 Plugin::Plugin(const std::filesystem::path& path) : dlData(path.c_str()), filename(path.filename().string()) {
 
-  const auto rawNamePtr = dlData.getSymbol<const char**>("WISE_PLUGIN_NAME");
-  const auto rawVersionPtr = dlData.getSymbol<long*>("WISE_PLUGIN_VERSION");
+  const auto rawNamePtr = dlData.getSymbol<const char**>("WSMU_PLUGIN_NAME");
+  const auto rawVersionPtr = dlData.getSymbol<long*>("WSMU_PLUGIN_VERSION");
 
   if (!rawNamePtr)
     throw std::runtime_error("Plugin {} does not have a name symbol.");
@@ -21,7 +21,7 @@ Plugin::Plugin(const std::filesystem::path& path) : dlData(path.c_str()), filena
   name = std::string(*rawNamePtr);
   version = static_cast<long>(*rawVersionPtr);
 
-  for (auto cmdPtr = dlData.getSymbol<const char**>("WISE_PLUGIN_COMMAND_LIST"); *cmdPtr != nullptr; ++cmdPtr) {
+  for (auto cmdPtr = dlData.getSymbol<const char**>("WSMU_PLUGIN_COMMAND_LIST"); *cmdPtr != nullptr; ++cmdPtr) {
     using FuncType = int(*)(int, const char**);
     const auto func = dlData.getSymbol<FuncType>(*cmdPtr);
     commands[*cmdPtr] = func;
@@ -36,25 +36,20 @@ std::vector<std::string> Plugin::getCommands() const {
   return commandList;
 }
 
-int Plugin::execute(const char* command, const std::vector<std::string>& args) {
-  std::vector<const char*> argv;
-  argv.reserve(args.size());
-  for (const auto& s : args)
-    argv.push_back(s.c_str());
-
-  if (args.empty()) {
-    return execute(command, 0, nullptr);
-  }
-
-  return execute(command, static_cast<int>(argv.size()), argv.data());
-}
-
-int Plugin::execute(const char* command, int argc, const char* argv[]) {
+int Plugin::execute(const char* command, const std::span<const char* const>& args) {
   const auto it = commands.find(command);
   if (it == commands.end()) {
     throw std::runtime_error(std::format("command not found: {}", command));
   }
-  return it->second(argc, argv);
+
+  // Создаем временный std::vector<const char*> из args
+  std::vector<const char*> argv;
+  argv.reserve(args.size());
+  for (const char* const ptr : args) {
+    argv.push_back(ptr);
+  }
+
+  return it->second(static_cast<int>(argv.size()), argv.data());
 }
 
 std::string Plugin::getName() const {

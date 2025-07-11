@@ -2,27 +2,27 @@
 // Created by paul on 11.07.25.
 //
 
-#include "DlHandle.h"
+#include "DLHandle.h"
 
-DlHandle::DlHandle(const char *path) {
+DLHandle::DLHandle(const char *path) {
   handle = dlopen(path, RTLD_NOW);
   if (!handle)
     throw std::runtime_error(dlerror());
 }
 
-DlHandle::~DlHandle() {
+DLHandle::~DLHandle() {
   if (handle)
     dlclose(handle);
 }
 
-void * DlHandle::get(const char *symname) const {
+void * DLHandle::get(const char *symname) const {
   void* symPtr = dlsym(handle, symname);
   if (!symPtr)
     throw std::runtime_error(dlerror());
   return symPtr;
 }
 
-DlHandle & DlHandle::operator=(DlHandle &&other) noexcept {
+DLHandle & DLHandle::operator=(DLHandle &&other) noexcept {
   if (this != &other) {
     if (handle) dlclose(handle);
     handle = other.handle;

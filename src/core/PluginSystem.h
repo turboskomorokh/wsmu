@@ -9,10 +9,11 @@
 
 
 class PluginSystem {
-  static inline std::vector<Plugin> loaded_plugins;
 public:
   static void LoadPlugins(const std::filesystem::path& pluginPath);
   static Plugin& GetPlugin(const std::string& name);
+private:
+  static inline std::vector<Plugin> loaded_plugins;
 };
 
 

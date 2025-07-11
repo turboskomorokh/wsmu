@@ -12,13 +12,11 @@
 #include <dlfcn.h>
 #include <stdexcept>
 
-class DlHandle {
-  void* handle = nullptr;
-
+class DLHandle {
 public:
-  explicit DlHandle(const char* path);
+  explicit DLHandle(const char* path);
 
-  ~DlHandle();
+  ~DLHandle();
 
   void* get(const char* symname) const;
 
@@ -26,18 +24,20 @@ public:
   T getSymbol(const char* symname) const;
 
 
-  DlHandle(const DlHandle&) = delete;
-  DlHandle& operator=(const DlHandle&) = delete;
+  DLHandle(const DLHandle&) = delete;
+  DLHandle& operator=(const DLHandle&) = delete;
 
-  DlHandle(DlHandle&& other) noexcept : handle(other.handle) {
+  DLHandle(DLHandle&& other) noexcept : handle(other.handle) {
     other.handle = nullptr;
   }
 
-  DlHandle& operator=(DlHandle&& other) noexcept;
+  DLHandle& operator=(DLHandle&& other) noexcept;
+private:
+  void* handle = nullptr;
 };
 
 template<typename T>
-T DlHandle::getSymbol(const char *symname) const {
+T DLHandle::getSymbol(const char *symname) const {
   return reinterpret_cast<T>(get(symname));
 }
 

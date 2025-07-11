@@ -14,7 +14,7 @@
 #include <dlfcn.h>
 #include <unordered_map>
 
-#include "DlHandle.h"
+#include "DLHandle.h"
 
 using FuncType = int(*)(int, const char**);
 
@@ -27,13 +27,12 @@ public:
   Plugin& operator=(Plugin&&) = default;
 
   [[nodiscard]] std::vector<std::string> getCommands() const;
-  int execute(const char* command, const std::vector<std::string>& args);
-  int execute(const char *command, int argc, const char *argv[]);
+  int execute(const char *command, const std::span<const char * const> &args);
   std::string getName() const;
   long getVersion() const;
 
 private:
-  DlHandle dlData;
+  DLHandle dlData;
   std::unordered_map<std::string, FuncType> commands;
   std::string name, filename;
   long version;
