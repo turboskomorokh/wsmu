@@ -4,11 +4,11 @@
 
 #include <vector>
 
-#include "Pluggable.h"
+#include "Plugin.h"
 
 #include <ranges>
 
-Pluggable::Pluggable(const std::filesystem::path& path) : dlData(path.c_str()), filename(path.filename().string()) {
+Plugin::Plugin(const std::filesystem::path& path) : dlData(path.c_str()), filename(path.filename().string()) {
 
   const auto rawNamePtr = dlData.getSymbol<const char**>("WISE_PLUGIN_NAME");
   const auto rawVersionPtr = dlData.getSymbol<long*>("WISE_PLUGIN_VERSION");
@@ -28,7 +28,7 @@ Pluggable::Pluggable(const std::filesystem::path& path) : dlData(path.c_str()), 
   }
 }
 
-std::vector<std::string> Pluggable::getCommands() const {
+std::vector<std::string> Plugin::getCommands() const {
   std::vector<std::string> commandList;
   commandList.reserve(commands.size());
   for (const auto &cmd: commands | std::views::keys)
@@ -36,7 +36,7 @@ std::vector<std::string> Pluggable::getCommands() const {
   return commandList;
 }
 
-int Pluggable::execute(const char* command, const std::vector<std::string>& args) {
+int Plugin::execute(const char* command, const std::vector<std::string>& args) {
   std::vector<const char*> argv;
   argv.reserve(args.size());
   for (const auto& s : args)
@@ -49,7 +49,7 @@ int Pluggable::execute(const char* command, const std::vector<std::string>& args
   return execute(command, static_cast<int>(argv.size()), argv.data());
 }
 
-int Pluggable::execute(const char* command, int argc, const char* argv[]) {
+int Plugin::execute(const char* command, int argc, const char* argv[]) {
   const auto it = commands.find(command);
   if (it == commands.end()) {
     throw std::runtime_error(std::format("command not found: {}", command));
@@ -57,11 +57,11 @@ int Pluggable::execute(const char* command, int argc, const char* argv[]) {
   return it->second(argc, argv);
 }
 
-std::string Pluggable::getName() const {
+std::string Plugin::getName() const {
   return name;
 }
 
-long Pluggable::getVersion() const {
+long Plugin::getVersion() const {
   return version;
 }
 

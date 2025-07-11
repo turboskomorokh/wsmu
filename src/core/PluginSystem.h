@@ -5,14 +5,14 @@
 #ifndef PLUGINSYSTEM_H
 #define PLUGINSYSTEM_H
 
-#include "module/Pluggable.h"
+#include "module/Plugin.h"
 
 
 class PluginSystem {
-  static inline std::vector<Pluggable> loaded_plugins;
+  static inline std::vector<Plugin> loaded_plugins;
 public:
   static void LoadPlugins(const std::filesystem::path& pluginPath);
-  static Pluggable& GetPlugin(const std::string& name);
+  static Plugin& GetPlugin(const std::string& name);
 };
 
 

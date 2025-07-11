@@ -9,7 +9,7 @@ add_compile_options(-Wall -Wextra -Wpedantic)
 
 add_executable(workbench
         src/main.cpp
-        src/module/Pluggable.cpp
+        src/module/Plugin.cpp
         src/module/DlHandle.cpp
         src/core/PluginSystem.cpp
 )

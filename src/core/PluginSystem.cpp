@@ -27,7 +27,7 @@ void PluginSystem::LoadPlugins(const std::filesystem::path &pluginPath) {
   }
 }
 
-Pluggable& PluginSystem::GetPlugin(const std::string& name) {
+Plugin& PluginSystem::GetPlugin(const std::string& name) {
   for (auto& plugin : loaded_plugins) {
     if (plugin.getName().find(name) != std::string::npos)
       return plugin;

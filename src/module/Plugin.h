@@ -18,13 +18,13 @@
 
 using FuncType = int(*)(int, const char**);
 
-class Pluggable {
+class Plugin {
 public:
-  explicit Pluggable(const std::filesystem::path& path);
-  virtual ~Pluggable() = default;
+  explicit Plugin(const std::filesystem::path& path);
+  virtual ~Plugin() = default;
 
-  Pluggable(Pluggable&&) = default;
-  Pluggable& operator=(Pluggable&&) = default;
+  Plugin(Plugin&&) = default;
+  Plugin& operator=(Plugin&&) = default;
 
   [[nodiscard]] std::vector<std::string> getCommands() const;
   int execute(const char* command, const std::vector<std::string>& args);

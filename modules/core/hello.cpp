@@ -10,5 +10,5 @@ extern "C" const char *WISE_PLUGIN_COMMAND_LIST[] = {
 };
 
 extern "C" int hello(int argc, const char *argv[]) {
-  return std::printf("Hello from plugin!\n");
+  return std::printf("Hello, world!\n");
 }

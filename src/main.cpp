@@ -6,7 +6,7 @@
 #include <unordered_map>
 
 #include "core/PluginSystem.h"
-#include "module/Pluggable.h"
+#include "module/Plugin.h"
 
 const std::string utility_message = R"(
  _ _ _  _____  _____  _____
@@ -20,6 +20,6 @@ int main() {
   std::println("{}", utility_message);
   PluginSystem::LoadPlugins("./plugins");
 
-  Pluggable& plugin = PluginSystem::GetPlugin("Hello");
+  Plugin& plugin = PluginSystem::GetPlugin("Hello");
   plugin.execute("hello", {});
 }
